@@ -2,8 +2,21 @@
 <html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Thể hình</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css"></head><body>
-<header><nav><span class="logo">Lưu Hoàng Tân</span><a href="index.html">Trang chủ</a><a href="truong-thpt.html">Trường THPT</a><a href="so-thich.html">Sở thích</a><a href="the-thao.html" class=on aria-current=page>Thể hình</a><a href="muc-tieu.html">Mục tiêu</a></nav></header>
+<link rel="stylesheet" href="style.css"><script>
+  // Áp dụng lựa chọn đã lưu trước khi trang hiển thị để tránh nháy giao diện.
+  (() => {
+    try {
+      const savedTheme = localStorage.getItem("site-theme");
+      if (savedTheme === "light" || savedTheme === "dark") {
+        document.documentElement.dataset.theme = savedTheme;
+      }
+    } catch (_) {
+      // Website vẫn hoạt động bình thường nếu trình duyệt chặn localStorage.
+    }
+  })();
+</script>
+</head><body>
+<header><nav><span class="logo">Lưu Hoàng Tân</span><a href="index.html">Trang chủ</a><a href="truong-thpt.html">Trường THPT</a><a href="so-thich.html">Sở thích</a><a href="the-thao.html" class=on aria-current=page>Thể hình</a><a href="muc-tieu.html">Mục tiêu</a><button class="theme-toggle" type="button" aria-label="Chuyển sang giao diện tối" title="Chuyển giao diện sáng/tối"><span class="icon-moon" aria-hidden="true">☾</span><span class="icon-sun" aria-hidden="true">☀</span></button></nav></header>
 <main><h1>Thể hình</h1>
 <p class="lead">Rèn luyện sức khỏe để học tập và làm việc tốt hơn.</p>
 <p>Thể hình giúp mình giữ tinh thần thoải mái và có thêm năng lượng. Mình thường tập thể hình 4 buổi mỗi tuần.</p>
@@ -12,4 +25,42 @@
 <div class="card"><h3>Kỷ luật</h3><p>Tập đều đặn giúp mình duy trì thói quen tốt.</p></div>
 <div class="card"><h3>Cơ thể</h3><p>Có thân hình đẹp hơn.</p></div></div>
 <br>
-<footer>© 2026 Lưu Hoàng Tân – Sinh viên Trường Đại học Hải Phòng</footer></body></html>
+<footer>© 2026 Lưu Hoàng Tân – Sinh viên Trường Đại học Hải Phòng</footer><script>
+  // Nút chuyển sáng/tối: lưu lựa chọn để dùng chung trên tất cả các trang.
+  (() => {
+    const button = document.querySelector(".theme-toggle");
+    if (!button) return;
+
+    const getCurrentTheme = () => {
+      const selected = document.documentElement.dataset.theme;
+      if (selected) return selected;
+      return window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+    };
+
+    const updateButtonLabel = () => {
+      const isDark = getCurrentTheme() === "dark";
+      button.setAttribute(
+        "aria-label",
+        isDark ? "Chuyển sang giao diện sáng" : "Chuyển sang giao diện tối"
+      );
+    };
+
+    updateButtonLabel();
+
+    button.addEventListener("click", () => {
+      const nextTheme = getCurrentTheme() === "dark" ? "light" : "dark";
+      document.documentElement.dataset.theme = nextTheme;
+
+      try {
+        localStorage.setItem("site-theme", nextTheme);
+      } catch (_) {
+        // Chế độ vẫn đổi được trong phiên hiện tại nếu không lưu được.
+      }
+
+      updateButtonLabel();
+    });
+  })();
+</script>
+</body></html>
